@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn { @apply flex items-center gap-2 rounded cursor-pointer p-2 px-4 transition-colors text-gray-700; }
+  .btn * { @apply text-gray-700; }
+  .btn:hover { @apply bg-gray-200; }
+  .btn:hover * { @apply text-gray-900; }
+  .btn-icon { @apply text-xl transition-colors; }
+  .btn-text { @apply text-sm font-medium transition-colors; }
+
+  .btn-upload { @apply w-8 h-8 rounded flex justify-center items-center cursor-pointer text-gray-200 hover:text-white p-5 transition-colors }
+  .btn-upload:disabled { @apply cursor-auto bg-gray-300 text-gray-400 hover:bg-gray-300 hover:text-gray-400 }
+  /*FIXME: generic colors? HOW */
+  .btn-upload-green{ @apply btn-upload bg-green-400 hover:bg-green-500 ; }
+  .btn-upload-red { @apply btn-upload bg-red-400 hover:bg-red-500 }
+  .btn-upload-blue { @apply btn-upload bg-blue-400 hover:bg-blue-500 } 
+}
+
+/* input[type='text']:focus { box-shadow: none; } */
+
+:root {
+  --primary: #496DDB;
+  --secondary: #717EC3;
+  --tertiary: #AE8799;
+  --fourth: #542344;
+  --highlight: #df57c2;
+
+  --a: #244e76;
+  --b: #8cd1e1;
+  --c: #d2e4eb;
+  --d: #3d5328;
+  --e: #072b0e;
+
+  --tw-1: #2563eb; /* blue-600 */
+  --tw-2: #7dd3fc; /* sky-300 */
+  --tw-3: #e0f2fe; /* sky-100 */
+  --tw-4: #3F6212; /* lime-800 */
+  --tw-5: #14532D; /* green-900 */
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+
+

@@ -1,0 +1,147 @@
+[
+  {
+    "name": "solid",
+    "enforce": "pre",
+    "invokeCount": 42,
+    "totalTime": 471
+  },
+  {
+    "name": "vite:esbuild",
+    "invokeCount": 17,
+    "totalTime": 421
+  },
+  {
+    "name": "vite:optimized-deps",
+    "invokeCount": 10,
+    "totalTime": 363
+  },
+  {
+    "name": "vite:import-analysis",
+    "invokeCount": 76,
+    "totalTime": 134
+  },
+  {
+    "name": "vite:css",
+    "invokeCount": 1,
+    "totalTime": 69
+  },
+  {
+    "name": "solid-start-file-system-router",
+    "enforce": "pre",
+    "invokeCount": 4,
+    "totalTime": 32
+  },
+  {
+    "name": "vite:import-glob",
+    "invokeCount": 1,
+    "totalTime": 4
+  },
+  {
+    "name": "vite:client-inject",
+    "invokeCount": 4,
+    "totalTime": 3
+  },
+  {
+    "name": "vite:css-post",
+    "invokeCount": 1,
+    "totalTime": 0
+  },
+  {
+    "name": "alias",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "solid-start-config",
+    "enforce": "pre",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "solid-start-inline-server-modules",
+    "enforce": "pre",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "solid-start-route-manifest",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "solid-start-server",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite-plugin-inspect",
+    "enforce": "pre",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:asset",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:asset-import-meta-url",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:define",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:dynamic-import-vars",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:html-inline-proxy",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:json",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:modulepreload-polyfill",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:pre-alias",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:resolve",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:wasm-fallback",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:wasm-helper",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:worker",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:worker-import-meta-url",
+    "invokeCount": 0,
+    "totalTime": 0
+  }
+]

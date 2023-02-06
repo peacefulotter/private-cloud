@@ -1,0 +1,44 @@
+.directories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 0px 10px 200px 10px;
+  max-height: 90vh;
+  overflow-y: scroll;
+}
+
+.repo-elt {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--grey);
+  overflow: hidden;
+}
+
+.repo-elt-file img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 200ms ease;
+}
+
+.repo-elt-folder:hover, .repo-elt-file:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.repo-elt-file:hover {
+  filter: brightness(90%);
+}
+
+.repo-elt-file:hover img {
+  transform: scale(110%) !important;
+}
+
+.repo-icon {
+  font-size: 3em;
+}

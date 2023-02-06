@@ -1,0 +1,4 @@
+- be able to move files and folders (duplicate element + drag and drop -> react-draggable?)
+- zoom in on images when clicking on them + load txt, pdf ...?? 
+- delete files and folders go to recycle bin
+- Removed files need to reflect on UI
