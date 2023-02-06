@@ -1,5 +1,11 @@
 import { Accessor, Setter } from "solid-js";
 
+export interface User {
+    id: number;
+    username: string;
+    password: string;
+}
+
 export type UploadState = 'disabled' | 'loaded' | 'uploading' | 'complete'
 
 export type Explorer = FileOrFolder[];

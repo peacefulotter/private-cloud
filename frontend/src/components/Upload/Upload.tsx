@@ -1,5 +1,5 @@
 import { useRouteData } from "solid-start";
-import { createEffect, createSignal } from "solid-js";
+import { createSignal } from "solid-js";
 import { FiChevronLeft, FiChevronRight } from "solid-icons/fi";
 
 import FileList from "./FileList";
@@ -38,10 +38,6 @@ const Upload = () => {
 		)
 	}
 
-	createEffect( () => {
-		console.log(files())
-	})
-
 	const addFiles = (e: any) => {
 		setFiles(prev => [...prev, ...e.target.files]);
 		setState('loaded')
@@ -50,7 +46,6 @@ const Upload = () => {
 	const remFile = (i: number) => {
 		if ( files() === undefined ) return
 		const temp = [...files()]
-		console.log(i)
 		temp.splice(i, 1)
 		setFiles( temp );
 		if ( temp.length === 0 )
@@ -65,13 +60,11 @@ const Upload = () => {
 
 	const toggleOpen = () => setOpened(prev => !prev )
 
-	const BurgerIcon = opened() ? FiChevronLeft : FiChevronRight 
-
     return (
 		<>
 		<form class="h-full w-[25%] relative flex flex-col items-center gap-3 p-4 bg-gray-100 transition-transform" style={{transform: opened() ? '' : 'translateX(-100%)'}}>
 			<div class="absolute p-3 ml-auto top-0 right-0 translate-x-full bg-gray-100 hover:bg-gray-200 rounded cursor-pointer transition-colors">
-				<BurgerIcon class="text-3xl text-gray-400 transition-transform" onClick={toggleOpen} />
+				<FiChevronRight class="text-3xl text-gray-400 transition-transform" style={{transform: opened() ? 'rotate(180deg)' : ''}} onClick={toggleOpen} />
 			</div>
 			<Header state={state} addFiles={addFiles} remFiles={remFiles} uploadFiles={uploadFiles} />
 			<FileList files={files} remFile={remFile}/>

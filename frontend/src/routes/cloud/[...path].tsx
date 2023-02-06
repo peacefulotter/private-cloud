@@ -1,3 +1,4 @@
+
 import { createEffect, createSignal, For, Show } from 'solid-js';
 import { RouteDataFunc, useRouteData } from 'solid-start';
 
@@ -7,11 +8,11 @@ import RFolder from '~/components/Directory/Folders/RFolder';
 import Menu from '~/components/Directory/Menu/Menu';
 import FileService from '~/requests/FileService';
 import FolderService from '~/requests/FolderService';
+import Upload from '~/components/Upload/Upload';
 
 import { Explorer, ExplorerRouteData, FileOrFolder, FileOrFolderWithIndex, FileServiceContext, FolderServiceContext } from '~/types';
 
 import '~/components/Directory/index.css'
-import Upload from '~/components/Upload/Upload';
 
 function partition<T, U>(array: T[], isLeft: (t: T) => boolean, map: (t: T, i: number) => U) 
 {
@@ -23,16 +24,17 @@ function partition<T, U>(array: T[], isLeft: (t: T) => boolean, map: (t: T, i: n
   }
 
 export const routeData: RouteDataFunc<ExplorerRouteData> = ({ location, params }) => {
+    const { pathname } = location
+    const pn = pathname.replace('/cloud', '/')
+    console.log(pn);
+    
+
     const [explorer, setExplorer] = createSignal<Explorer>([])
     const [isSelecting, setSelecting] = createSignal<boolean>(false);
-    
-    // const { pathname } = useLocation(); 
-    const pathname  = "/" 
-
 
     createEffect( () => {
-        FolderService.read(pathname, setExplorer)
-    }, [pathname] )
+        FolderService.read(pn, setExplorer)
+    }, pathname )
 
     const toggleSelectExplorer = (i: number) => () => {
         const temp = [...explorer()];
@@ -45,7 +47,7 @@ export const routeData: RouteDataFunc<ExplorerRouteData> = ({ location, params }
 
     const upload = (files: File[], progress: (e: ProgressEvent) => void, cb: () => void, err: () => void) => {
         const data = new FormData();
-        data.append('pathname', pathname)
+        data.append('pathname', pn)
         files.forEach( file => data.append('files[]', file, file.name) )
     
         FileService.upload( data, 
@@ -72,36 +74,37 @@ export const routeData: RouteDataFunc<ExplorerRouteData> = ({ location, params }
         setExplorer( prev => prev.filter( v => v.name !== name || v.type !== type ) )
 
     const folderService: FolderServiceContext = {
-        downloadOne: FileService.downloadOne(pathname),
-        removeOne: FolderService.removeOne(pathname, removeOne('folder') ),
-        rename: FolderService.rename(explorer(), sortExplorer, pathname),
+        downloadOne: FolderService.downloadOne(pn),
+        removeOne: FolderService.removeOne(pn, removeOne('folder') ),
+        rename: FolderService.rename(explorer(), sortExplorer, pn),
         create: () => {
             const name = resolveName('New folder', 'folder');
-            FolderService.create( pathname, name, () => {
+            FolderService.create( pn, name, () => {
                 sortExplorer( prev => [...prev, { name, selected: false, type: 'folder' }] )
             } )
         },
     }
 
     const fileService: FileServiceContext = {
-        downloadOne: FileService.downloadOne(pathname),
-        removeOne: FileService.removeOne(pathname, removeOne('file') ),
-        rename: FileService.rename(explorer(), sortExplorer, pathname),
+        downloadOne: FileService.downloadOne(pn),
+        removeOne: FileService.removeOne(pn, removeOne('file') ),
+        rename: FileService.rename(explorer(), sortExplorer, pn),
     }
 
-    const removeSelected = FileService.removeSelected( pathname, explorer(), () => 
+    const removeSelected = FileService.removeSelected( pn, explorer(), () => 
         setExplorer( prev => prev.filter( v => !v.selected ) )
     )
 
-    const downloadSelected = FileService.downloadMany(pathname, explorer().filter( v => v.selected ))
+    const downloadSelected = FileService.downloadMany(pn, explorer().filter( v => v.selected ))
 
-    return { 
-        explorer, setExplorer, isSelecting, setSelecting, 
-        toggleSelectExplorer, sortExplorer, upload, 
-        removeSelected, downloadSelected,
-        folderService, fileService, pathname 
-    };
-  }
+	return { 
+		explorer, setExplorer, isSelecting, setSelecting, 
+		toggleSelectExplorer, sortExplorer, upload, 
+		removeSelected, downloadSelected,
+		folderService, fileService, pathname: pn 
+	};
+}
+
 
 function ExplorerComponent() 
 {
@@ -138,15 +141,20 @@ function ExplorerComponent()
 }
 
 
-export default function index()
-{
-    return (
-        <div class='flex h-full w-full'>
-            <Upload />
-            <div class="w-full">
-                <Menu />
-                <ExplorerComponent/>
-            </div>
-        </div>
-    )
+export default function Home() {
+
+	return (
+		<main class="w-full h-full p-4 space-y-2">
+			<nav>
+			</nav>
+            <div class='flex h-full w-full'>
+				<Upload />
+				<div class="w-full">
+					<Menu />
+					<ExplorerComponent/>
+				</div>
+			</div>
+		</main>
+	);
 }
+
