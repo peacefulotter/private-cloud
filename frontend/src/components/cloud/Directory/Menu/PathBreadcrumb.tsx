@@ -1,6 +1,6 @@
 
 import { FiHome } from 'solid-icons/fi';
-import { children, For } from 'solid-js';
+import { children, For, Show } from 'solid-js';
 import { A, useRouteData } from 'solid-start';
 import { ExplorerRouteData } from '~/types';
 
@@ -28,7 +28,7 @@ const BreadcrumbItem = ( { home, path, href }: IBreadcrumbItem) => {
         <>
         <li class='group'>
             <A rel="link" href={href} class="btn">
-                { home ? <FiHome class="btn-icon" /> : null }
+                <Show when={home}><FiHome class="btn-icon" /></Show>
                 <p class="btn-text">{ decodeURI( path ) }</p>
             </A>
         </li>
@@ -42,14 +42,15 @@ const PathBreadcrumb = () => {
     const unveil = pathname.split('/').filter((e) => e !== '')
     const navigations = unveil.reduce( 
         (prev: string[], cur: string) =>
-            [...prev, (prev.length > 0 ? prev[prev.length - 1] : '')  + '/' + cur + '/']
+            [...prev, (prev.length > 0 ? prev[prev.length - 1] : '')  + cur + '/']
         , 
         [] as string[]
     )
+    unveil.shift()
 
     return (
         <Breadcrumb aria-label="breadcrumb">
-            <BreadcrumbItem href="/" home={true} path={"Home"} />
+            <BreadcrumbItem href="/cloud/" home={true} path={"Home"} />
             <For each={unveil}>
                 {(path, i) => 
                     <BreadcrumbItem href={navigations[i()]} path={path} />

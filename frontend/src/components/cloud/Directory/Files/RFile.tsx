@@ -1,18 +1,16 @@
 import { FiCheckSquare, FiDownload, FiTrash2 } from 'solid-icons/fi';
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, createSignal, on, Show } from 'solid-js';
 import { useRouteData } from 'solid-start';
 
 import { ExplorerRouteData, FileOrFolderWithIndex } from '~/types';
-import FileIcon from '~/components/FileIcon';
+import FileIcon from '~/components/cloud/FileIcon';
 import FileBtn from './FileBtn';
 
 interface IFile {
-    files: FileOrFolderWithIndex[];
     file: FileOrFolderWithIndex;
-    i: number;
 }
 
-export default function RFile( { files, file, i }: IFile )
+export default function RFile( { file }: IFile )
 {
     const { name, selected } = file;
     const { fileService, toggleSelectExplorer, isSelecting, pathname } = useRouteData<ExplorerRouteData>()
@@ -27,14 +25,17 @@ export default function RFile( { files, file, i }: IFile )
     
     // TODO: improve -> use a react image library
     // TODO: then -> make animate-fade-in work
-    createEffect( () => {
-        setFallback(false)
-        // FIXME: dynamic url
-        const to = pathname + name;
-        const src = `http://localhost:3001${to}`
-        setSrc(src)
-        setLoaded(false)
-    }, [name] )
+    createEffect( on(
+        () => file.name,
+        () => {
+            setFallback(false)
+            // FIXME: dynamic url
+            const to = pathname + name;
+            const src = `http://localhost:3001${to}`
+            setSrc(src)
+            setLoaded(false)
+        }
+    ) )
 
     const onError = () => {
         setFallback(true);
@@ -43,7 +44,7 @@ export default function RFile( { files, file, i }: IFile )
     const onLoad = () => setLoaded(true)
 
     const onClick = () => isSelecting() 
-        ? toggleSelectExplorer(i)()
+        ? toggleSelectExplorer(file.i)()
         : null // TODO: show image big
 
     const onDownloadClick = (e: MouseEvent) => {
@@ -66,18 +67,18 @@ export default function RFile( { files, file, i }: IFile )
             onMouseOver={onMouseOver} 
             onMouseOut={onMouseOut}
         >
-            { fallback()
-                ? 
-                    <>
-                        <FileIcon filename={pathname} size={4} />
-                        <p class="text-xs text-center truncate" style={{width: '100px'}}>{name}</p>
-                    </>
-                : <img 
-                    loading='lazy'
-                    src={src()}  
-                    onError={onError} 
-                    onLoad={onLoad} />
-            }
+            <FileIcon filename={pathname} size={4} />
+            {/* <Show 
+                when={fallback()} 
+                // fallback={
+                //     <>
+                //         <FileIcon filename={pathname} size={4} />
+                //         <p class="w-24 text-xs text-center truncate">{name}</p>
+                //     </>
+                // }
+            >
+                <img loading='lazy' src={src()} onError={onError} onLoad={onLoad} />
+            </Show> */}
             <FileBtn
                 className='inset-1 w-min h-min bg-green-50'
                 iconClassName='text-green-500' 

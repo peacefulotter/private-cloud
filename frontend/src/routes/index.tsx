@@ -3,8 +3,6 @@ import { useRouteData } from 'solid-start';
 
 import { getUser, logout } from '~/db/session';
 
-import '~/components/Directory/index.css'
-
 export const routeData = () => {
 	return createServerData$(async (_, { request }) => {
 		const user = await getUser(request);

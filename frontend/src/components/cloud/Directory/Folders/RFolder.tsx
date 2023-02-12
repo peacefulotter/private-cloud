@@ -19,7 +19,7 @@ const catchEnter = ( e: KeyboardEvent ) => {
 
 export default function RFolder( { folders, folder }: IFolder )
 {
-    const { explorer, setExplorer, toggleSelectExplorer, folderService, isSelecting, pathname } = useRouteData<ExplorerRouteData>();
+    const { toggleSelectExplorer, folderService, isSelecting, pathname } = useRouteData<ExplorerRouteData>();
     const { name } = folder;
 
     const [editing, setEditing] = createSignal<boolean>(false);
@@ -63,11 +63,11 @@ export default function RFolder( { folders, folder }: IFolder )
     return (
         <A
             href={isSelecting() ? '' : pathname + name + '/'} 
-            class="repo-elt repo-elt-folder animate-fade-in"
+            class="flex flex-col justify-center w-28 h-28 items-center cursor-pointer no-underline overflow-hidden repo-elt-folder animate-fade-in"
             style={{"pointer-events": editing() ? 'none' : 'auto'}}
             onClick={() => isSelecting() && toggleSelectExplorer(folder.i)}
         >
-            <FiFolder class='repo-icon'/>
+            <FiFolder class='text-5xl'/>
             <input 
                 type='text'
                 class="bg-transparent p-1 font-mono font-bold text-xs rounded-sm focus:ring-gray-500 border-transparent" 

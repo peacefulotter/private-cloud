@@ -16,7 +16,6 @@
   align-items: center;
   cursor: pointer;
   text-decoration: none;
-  color: var(--grey);
   overflow: hidden;
 }
 
@@ -37,8 +36,4 @@
 
 .repo-elt-file:hover img {
   transform: scale(110%) !important;
-}
-
-.repo-icon {
-  font-size: 3em;
 }

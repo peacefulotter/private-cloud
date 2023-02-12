@@ -1,18 +1,18 @@
 
-import { createEffect, createSignal, For, Show } from 'solid-js';
-import { RouteDataFunc, useRouteData } from 'solid-start';
+import { createEffect, createSignal, For, on, Show } from 'solid-js';
+import { RouteDataFunc, useLocation, useNavigate, useParams, useRouteData } from 'solid-start';
 
-import RFile from '~/components/Directory/Files/RFile';
-import AddFolderBtn from '~/components/Directory/Folders/AddFolderBtn';
-import RFolder from '~/components/Directory/Folders/RFolder';
-import Menu from '~/components/Directory/Menu/Menu';
-import FileService from '~/requests/FileService';
-import FolderService from '~/requests/FolderService';
-import Upload from '~/components/Upload/Upload';
+import RFile from '~/components/cloud/Directory/Files/RFile';
+import AddFolderBtn from '~/components/cloud/Directory/Folders/AddFolderBtn';
+import RFolder from '~/components/cloud/Directory/Folders/RFolder';
+import Menu from '~/components/cloud/Directory/Menu/Menu';
+import FileService from '~/requests/cloud/FileService';
+import FolderService from '~/requests/cloud/FolderService';
+import Upload from '~/components/cloud/Upload/Upload';
 
 import { Explorer, ExplorerRouteData, FileOrFolder, FileOrFolderWithIndex, FileServiceContext, FolderServiceContext } from '~/types';
 
-import '~/components/Directory/index.css'
+import '~/components/cloud/Directory/index.css'
 
 function partition<T, U>(array: T[], isLeft: (t: T) => boolean, map: (t: T, i: number) => U) 
 {
@@ -23,18 +23,18 @@ function partition<T, U>(array: T[], isLeft: (t: T) => boolean, map: (t: T, i: n
     }, [[], []] as [U[], U[]]);
   }
 
-export const routeData: RouteDataFunc<ExplorerRouteData> = ({ location, params }) => {
+export const routeData: RouteDataFunc<ExplorerRouteData> = ({location}) => {
     const { pathname } = location
-    const pn = pathname.replace('/cloud', '/')
-    console.log(pn);
-    
 
     const [explorer, setExplorer] = createSignal<Explorer>([])
     const [isSelecting, setSelecting] = createSignal<boolean>(false);
 
-    createEffect( () => {
-        FolderService.read(pn, setExplorer)
-    }, pathname )
+    createEffect( on(
+        () => location.pathname, 
+        () => {
+            FolderService.read(pathname, setExplorer)
+        }
+    ))
 
     const toggleSelectExplorer = (i: number) => () => {
         const temp = [...explorer()];
@@ -47,7 +47,6 @@ export const routeData: RouteDataFunc<ExplorerRouteData> = ({ location, params }
 
     const upload = (files: File[], progress: (e: ProgressEvent) => void, cb: () => void, err: () => void) => {
         const data = new FormData();
-        data.append('pathname', pn)
         files.forEach( file => data.append('files[]', file, file.name) )
     
         FileService.upload( data, 
@@ -74,34 +73,34 @@ export const routeData: RouteDataFunc<ExplorerRouteData> = ({ location, params }
         setExplorer( prev => prev.filter( v => v.name !== name || v.type !== type ) )
 
     const folderService: FolderServiceContext = {
-        downloadOne: FolderService.downloadOne(pn),
-        removeOne: FolderService.removeOne(pn, removeOne('folder') ),
-        rename: FolderService.rename(explorer(), sortExplorer, pn),
+        downloadOne: FolderService.downloadOne(pathname),
+        removeOne: FolderService.removeOne(pathname, removeOne('folder') ),
+        rename: FolderService.rename(explorer(), sortExplorer, pathname),
         create: () => {
             const name = resolveName('New folder', 'folder');
-            FolderService.create( pn, name, () => {
+            FolderService.create( pathname, name, () => {
                 sortExplorer( prev => [...prev, { name, selected: false, type: 'folder' }] )
             } )
         },
     }
 
     const fileService: FileServiceContext = {
-        downloadOne: FileService.downloadOne(pn),
-        removeOne: FileService.removeOne(pn, removeOne('file') ),
-        rename: FileService.rename(explorer(), sortExplorer, pn),
+        downloadOne: FileService.downloadOne(pathname),
+        removeOne: FileService.removeOne(pathname, removeOne('file') ),
+        rename: FileService.rename(explorer(), sortExplorer, pathname),
     }
 
-    const removeSelected = FileService.removeSelected( pn, explorer(), () => 
+    const removeSelected = FileService.removeSelected( pathname, explorer(), () => 
         setExplorer( prev => prev.filter( v => !v.selected ) )
     )
 
-    const downloadSelected = FileService.downloadMany(pn, explorer().filter( v => v.selected ))
+    const downloadSelected = FileService.downloadMany(pathname, explorer().filter( v => v.selected ))
 
 	return { 
 		explorer, setExplorer, isSelecting, setSelecting, 
 		toggleSelectExplorer, sortExplorer, upload, 
 		removeSelected, downloadSelected,
-		folderService, fileService, pathname: pn 
+		folderService, fileService, pathname 
 	};
 }
 
@@ -114,28 +113,31 @@ function ExplorerComponent()
         explorer(), (f) => f.type === 'folder', (f, i) => ({ ...f, i }) 
     );
 
+    console.log(folders, files);
+    
+
     return (
         <div class="directories">
             <For each={folders}>
-                { (folder, i) => <RFolder folders={folders} folder={folder} /> }
+                { (folder) => <RFolder folders={folders} folder={folder} /> }
             </For>
 
             <AddFolderBtn />
 
             <div class='w-full' />
             
-            <Show 
+            {/* <Show 
                 when={files.length > 0} 
                 fallback={
                     <p class="m-auto mt-32 text-xl text-gray-500">
                         this folder contains no files
                     </p>
                 }
-            >
-                <For each={files}>
-                    { (file, i) => <RFile files={files} file={file} i={i()} /> }
-                </For>
-            </Show>
+            > */}
+            <For each={files}>
+                { (file) => <RFile file={file} /> }
+            </For>
+            {/* </Show> */}
         </div>
     )
 }
@@ -144,7 +146,7 @@ function ExplorerComponent()
 export default function Home() {
 
 	return (
-		<main class="w-full h-full p-4 space-y-2">
+		<main class="w-full h-full">
 			<nav>
 			</nav>
             <div class='flex h-full w-full'>

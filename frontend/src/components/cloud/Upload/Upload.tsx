@@ -1,13 +1,11 @@
 import { useRouteData } from "solid-start";
 import { createSignal } from "solid-js";
-import { FiChevronLeft, FiChevronRight } from "solid-icons/fi";
+import { FiChevronRight } from "solid-icons/fi";
 
 import FileList from "./FileList";
 import Header from "./Header";
 
 import { ExplorerRouteData, UploadState } from "~/types";
-
-import './index.css'
 
 const Upload = () => {
 	const [opened, setOpened] = createSignal<boolean>(false)
@@ -62,7 +60,7 @@ const Upload = () => {
 
     return (
 		<>
-		<form class="h-full w-[25%] relative flex flex-col items-center gap-3 p-4 bg-gray-100 transition-transform" style={{transform: opened() ? '' : 'translateX(-100%)'}}>
+		<form class="h-100 w-96 relative flex flex-col items-center gap-3 p-10 bg-gray-100 transition-transform" style={{transform: opened() ? '' : 'translateX(-100%)'}}>
 			<div class="absolute p-3 ml-auto top-0 right-0 translate-x-full bg-gray-100 hover:bg-gray-200 rounded cursor-pointer transition-colors">
 				<FiChevronRight class="text-3xl text-gray-400 transition-transform" style={{transform: opened() ? 'rotate(180deg)' : ''}} onClick={toggleOpen} />
 			</div>
@@ -70,9 +68,9 @@ const Upload = () => {
 			<FileList files={files} remFile={remFile}/>
 		</form>
 
-		<div class="progress-wrapper shadow-md" style={{height: state() === 'uploading' ? '110px' : '0px'}}>
-			<div class="progress-container" id="progress">
-				<div class="upload-progress" style={{width: `${progress}%`}}></div>
+		<div class="fixed right-5 bottom-5 shadow-md" style={{height: state() === 'uploading' ? '110px' : '0px'}}>
+			<div class="relative flex w-64 h-full flex-col-reverse justify-between rounded-lg bg-white overflow-hidden transition-all" id="progress">
+				<div style={{width: `${progress}%`, background: "linear-gradient(to right, #E4F5DA, #A4DC86)"}} class="w-0 h-1/6"></div>
 			</div>
 		</div>
 		</>

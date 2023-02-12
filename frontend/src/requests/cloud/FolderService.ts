@@ -1,7 +1,7 @@
 
 import useRequestsService from "./RequestsService"
 
-import { FileOrFolder } from "../types"
+import { FileOrFolder } from "~/types"
 
 
 const service = useRequestsService('/folder/')

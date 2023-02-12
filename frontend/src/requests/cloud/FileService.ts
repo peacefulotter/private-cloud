@@ -1,7 +1,7 @@
 
 import useRequestsService from "./RequestsService";
 
-import { Explorer } from "../types";
+import { Explorer } from "~/types";
 
 
 const service = useRequestsService('/file/');

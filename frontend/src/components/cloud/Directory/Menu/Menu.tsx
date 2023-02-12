@@ -1,4 +1,5 @@
 import { FiDownload, FiPlusSquare, FiTrash2 } from "solid-icons/fi";
+import { Show } from "solid-js";
 import { useRouteData } from "solid-start";
 import { ExplorerRouteData } from "~/types";
 
@@ -15,8 +16,10 @@ export default function Menu()
         <div class="flex justify-between items-center mt-16 mx-32 mb-8">
             <PathBreadcrumb />
             <div class='flex items-center gap-4'>
-                { someAreSelected && <MenuCheckbox Icon={FiTrash2} color='red' name='Remove' onClick={removeSelected} behaveAsButton={true} /> }
-                { someAreSelected && <MenuCheckbox Icon={FiDownload} color='blue' name='Download' onClick={downloadSelected} behaveAsButton={true} /> }
+                <Show when={someAreSelected}>
+                    <MenuCheckbox Icon={FiTrash2} color='red' name='Remove' onClick={removeSelected} behaveAsButton={true} />
+                    <MenuCheckbox Icon={FiDownload} color='blue' name='Download' onClick={downloadSelected} behaveAsButton={true} /> 
+                </Show>
                 <MenuCheckbox Icon={FiPlusSquare} color='purple' name='Select' onClick={() => setSelecting(prev => !prev)} />
             </div>
         </div>

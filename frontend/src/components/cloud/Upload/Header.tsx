@@ -17,8 +17,8 @@ export default function Header( { state, addFiles, remFiles, uploadFiles }: IHea
     const disabled = !(state() === 'loaded')
 
     return (
-        <div class="flex items-center justify-between flex-wrap w-full gap-2">
-            <input class="inputfile" id="file" type="file" name="files[]" multiple onChange={addFiles} />
+        <div class="flex items-center justify-between w-full">
+            <input class="w-px h-px opacity-0 overflow-hidden  .absolute z-[-1]" id="file" type="file" name="files[]" multiple onChange={addFiles} />
             <label for="file" class="btn-upload-green w-[30%]">
                 <FiPlus class="select-btn text-3xl"/>
             </label>

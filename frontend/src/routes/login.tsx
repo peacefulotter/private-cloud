@@ -98,7 +98,7 @@ export default function Login() {
         <input
           type="hidden"
           name="redirectTo"
-          value={params.redirectTo ?? "/"}
+          value={params.redirectTo ?? "/cloud/"}
         />
         <fieldset>
           <legend>Login or Register?</legend>
