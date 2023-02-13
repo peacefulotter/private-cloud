@@ -13,35 +13,19 @@ interface IFile {
 export default function RFile( { file }: IFile )
 {
     const { name, selected } = file;
-    const { fileService, toggleSelectExplorer, isSelecting, pathname } = useRouteData<ExplorerRouteData>()
-
-    const [fallback, setFallback] = createSignal<boolean>(false)
+    const { fileService, toggleSelectExplorer, isSelecting, pathname } = useRouteData<ExplorerRouteData>();
+    
+    const [fallback, setFallback] = createSignal<boolean>(true)
     const [loaded, setLoaded] = createSignal<boolean>(false)
     const [hover, setHover] = createSignal<boolean>(false);
-    const [src, setSrc] = createSignal<string>('')
+
+    const to = pathname() + '/' + name;
+    const src = `http://localhost:3001${to}`;
 
     const onMouseOver = () => setHover(true);
-    const onMouseOut = () => setHover(false)
-    
-    // TODO: improve -> use a react image library
-    // TODO: then -> make animate-fade-in work
-    createEffect( on(
-        () => file.name,
-        () => {
-            setFallback(false)
-            // FIXME: dynamic url
-            const to = pathname + name;
-            const src = `http://localhost:3001${to}`
-            setSrc(src)
-            setLoaded(false)
-        }
-    ) )
-
-    const onError = () => {
-        setFallback(true);
-        setLoaded(true);
-    }
-    const onLoad = () => setLoaded(true)
+    const onMouseOut = () => setHover(false);
+    const onError = () => { setFallback(false); setLoaded(true); }
+    const onLoad = () => setLoaded(true);
 
     const onClick = () => isSelecting() 
         ? toggleSelectExplorer(file.i)()
@@ -61,24 +45,23 @@ export default function RFile( { file }: IFile )
 
     return (
         <div 
-            class="repo-elt repo-elt-file truncate relative transition-opacity duration-500" 
+            class="text-third flex flex-col justify-center items-center gap-1 w-28 h-28 repo-elt-file truncate relative transition-opacity duration-500" 
             style={ { opacity: loaded() ? 1 : 0 } }
             onClick={onClick} 
             onMouseOver={onMouseOver} 
             onMouseOut={onMouseOut}
         >
-            <FileIcon filename={pathname} size={4} />
-            {/* <Show 
+            <Show 
                 when={fallback()} 
-                // fallback={
-                //     <>
-                //         <FileIcon filename={pathname} size={4} />
-                //         <p class="w-24 text-xs text-center truncate">{name}</p>
-                //     </>
-                // }
+                fallback={
+                    <>
+                        <FileIcon filename={pathname()} size={4} />
+                        <p class="w-24 text-second text-xs text-center truncate">{name}</p>
+                    </>
+                }
             >
-                <img loading='lazy' src={src()} onError={onError} onLoad={onLoad} />
-            </Show> */}
+                <img src={src} onError={onError} onLoad={onLoad}></img>
+            </Show>
             <FileBtn
                 className='inset-1 w-min h-min bg-green-50'
                 iconClassName='text-green-500' 

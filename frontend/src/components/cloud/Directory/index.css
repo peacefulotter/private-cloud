@@ -27,7 +27,7 @@
 }
 
 .repo-elt-folder:hover, .repo-elt-file:hover {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.2) !important;
 }
 
 .repo-elt-file:hover {

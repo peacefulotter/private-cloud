@@ -1,14 +1,14 @@
 
-import { createEffect, createSignal, For, on, Show } from 'solid-js';
-import { RouteDataFunc, useLocation, useNavigate, useParams, useRouteData } from 'solid-start';
+import { createEffect, createMemo, createSignal, For, on } from 'solid-js';
+import { RouteDataFunc, useRouteData } from 'solid-start';
 
 import RFile from '~/components/cloud/Directory/Files/RFile';
+import UploadBtn from '~/components/cloud/Directory/Files/UploadBtn';
 import AddFolderBtn from '~/components/cloud/Directory/Folders/AddFolderBtn';
 import RFolder from '~/components/cloud/Directory/Folders/RFolder';
 import Menu from '~/components/cloud/Directory/Menu/Menu';
 import FileService from '~/requests/cloud/FileService';
 import FolderService from '~/requests/cloud/FolderService';
-import Upload from '~/components/cloud/Upload/Upload';
 
 import { Explorer, ExplorerRouteData, FileOrFolder, FileOrFolderWithIndex, FileServiceContext, FolderServiceContext } from '~/types';
 
@@ -24,17 +24,23 @@ function partition<T, U>(array: T[], isLeft: (t: T) => boolean, map: (t: T, i: n
   }
 
 export const routeData: RouteDataFunc<ExplorerRouteData> = ({location}) => {
-    const { pathname } = location
 
-    const [explorer, setExplorer] = createSignal<Explorer>([])
+    const [explorer, setExplorer] = createSignal<Explorer>([]);
     const [isSelecting, setSelecting] = createSignal<boolean>(false);
+    const [pathname, setPathname] = createSignal<string>(location.pathname);
 
-    createEffect( on(
-        () => location.pathname, 
-        () => {
-            FolderService.read(pathname, setExplorer)
-        }
-    ))
+    createEffect( on( 
+        () => location.pathname,
+        () => setPathname(location.pathname)
+    ) )
+
+    createEffect( () => {
+        FolderService.read(pathname(), (exp: Explorer) => {
+            setExplorer(exp);
+            console.log(pathname());
+            console.log(exp);
+        } )
+    } )
 
     const toggleSelectExplorer = (i: number) => () => {
         const temp = [...explorer()];
@@ -73,34 +79,35 @@ export const routeData: RouteDataFunc<ExplorerRouteData> = ({location}) => {
         setExplorer( prev => prev.filter( v => v.name !== name || v.type !== type ) )
 
     const folderService: FolderServiceContext = {
-        downloadOne: FolderService.downloadOne(pathname),
-        removeOne: FolderService.removeOne(pathname, removeOne('folder') ),
-        rename: FolderService.rename(explorer(), sortExplorer, pathname),
+        downloadOne: FolderService.downloadOne(location.pathname),
+        removeOne: FolderService.removeOne(location.pathname, removeOne('folder') ),
+        rename: FolderService.rename(explorer(), sortExplorer, location.pathname),
         create: () => {
             const name = resolveName('New folder', 'folder');
-            FolderService.create( pathname, name, () => {
+            FolderService.create( location.pathname, name, () => {
                 sortExplorer( prev => [...prev, { name, selected: false, type: 'folder' }] )
             } )
         },
     }
 
     const fileService: FileServiceContext = {
-        downloadOne: FileService.downloadOne(pathname),
-        removeOne: FileService.removeOne(pathname, removeOne('file') ),
-        rename: FileService.rename(explorer(), sortExplorer, pathname),
+        downloadOne: FileService.downloadOne(location.pathname),
+        removeOne: FileService.removeOne(location.pathname, removeOne('file') ),
+        rename: FileService.rename(explorer(), sortExplorer, location.pathname),
     }
 
-    const removeSelected = FileService.removeSelected( pathname, explorer(), () => 
+    const removeSelected = FileService.removeSelected( location.pathname, explorer(), () => 
         setExplorer( prev => prev.filter( v => !v.selected ) )
     )
 
-    const downloadSelected = FileService.downloadMany(pathname, explorer().filter( v => v.selected ))
+    const downloadSelected = FileService.downloadMany(location.pathname, explorer().filter( v => v.selected ))
 
 	return { 
-		explorer, setExplorer, isSelecting, setSelecting, 
+		explorer, isSelecting, pathname,
+        setExplorer, setSelecting, 
 		toggleSelectExplorer, sortExplorer, upload, 
 		removeSelected, downloadSelected,
-		folderService, fileService, pathname 
+		folderService, fileService
 	};
 }
 
@@ -109,54 +116,46 @@ function ExplorerComponent()
 {
     const { explorer } = useRouteData<ExplorerRouteData>();
 
-    const [folders, files] = partition<FileOrFolder, FileOrFolderWithIndex>(
-        explorer(), (f) => f.type === 'folder', (f, i) => ({ ...f, i }) 
-    );
-
-    console.log(folders, files);
+    const [folders, setFolders] = createSignal<FileOrFolderWithIndex[]>([])
+    const [files, setFiles] = createSignal<FileOrFolderWithIndex[]>([])
     
+    createEffect( () => {
+        const [_folders, _files] = partition<FileOrFolder, FileOrFolderWithIndex>(
+            explorer(), (f) => f.type === 'folder', (f, i) => ({ ...f, i }) 
+        )
+        setFolders(_folders);
+        setFiles(_files);
+        console.log('here');
+    })
 
     return (
-        <div class="directories">
-            <For each={folders}>
-                { (folder) => <RFolder folders={folders} folder={folder} /> }
-            </For>
-
-            <AddFolderBtn />
-
-            <div class='w-full' />
+        <div class="flex flex-col gap-10 w-full p-10 bg-primary">
+            <div class="flex gap-3">
+                <AddFolderBtn />
+                <For each={folders()}>
+                    { (folder) => <RFolder folders={folders()} folder={folder} /> }
+                </For>
+            </div>
             
-            {/* <Show 
-                when={files.length > 0} 
-                fallback={
-                    <p class="m-auto mt-32 text-xl text-gray-500">
-                        this folder contains no files
-                    </p>
-                }
-            > */}
-            <For each={files}>
-                { (file) => <RFile file={file} /> }
-            </For>
-            {/* </Show> */}
+            <div class='w-full h-px m-auto rounded bg-first' />
+
+            <div class="flex gap-3">
+                <UploadBtn />
+                <For each={files()}>
+                    { (file) => <RFile file={file} /> }
+                </For>
+            </div>
         </div>
     )
 }
 
 
 export default function Home() {
-
 	return (
-		<main class="w-full h-full">
-			<nav>
-			</nav>
-            <div class='flex h-full w-full'>
-				<Upload />
-				<div class="w-full">
-					<Menu />
-					<ExplorerComponent/>
-				</div>
-			</div>
-		</main>
+        <div class='h-full w-full bg-sixth'>
+            <Menu />
+            <ExplorerComponent/>
+        </div>
 	);
 }
 

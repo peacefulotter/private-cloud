@@ -13,7 +13,7 @@ export default function Menu()
     const someAreSelected = isSelecting() && explorer().some( v => v.selected );
 
     return (
-        <div class="flex justify-between items-center mt-16 mx-32 mb-8">
+        <div class="flex justify-between items-center pt-16 mx-32 mb-8">
             <PathBreadcrumb />
             <div class='flex items-center gap-4'>
                 <Show when={someAreSelected}>

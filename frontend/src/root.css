@@ -9,12 +9,11 @@
 @tailwind utilities;
 
 @layer components {
-  .btn { @apply flex items-center gap-2 rounded cursor-pointer p-2 px-4 transition-colors text-gray-700; }
-  .btn * { @apply text-gray-700; }
-  .btn:hover { @apply bg-gray-200; }
+  .btn { @apply flex items-center gap-2 rounded cursor-pointer p-2 px-4 transition-colors text-second; }
+  .btn * { @apply text-second; }
+  .btn:hover { @apply bg-third; }
   .btn:hover * { @apply text-gray-900; }
   .btn-icon { @apply text-xl transition-colors; }
-  .btn-text { @apply text-sm font-medium transition-colors; }
 
   .btn-upload { @apply w-8 h-8 rounded flex justify-center items-center cursor-pointer text-gray-200 hover:text-white p-5 transition-colors }
   .btn-upload:disabled { @apply cursor-auto bg-gray-300 text-gray-400 hover:bg-gray-300 hover:text-gray-400 }

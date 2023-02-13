@@ -8,7 +8,6 @@ const service = useRequestsService('/file/');
 
 const FileService = {
     upload: (data: FormData, onUploadProgress: (e: ProgressEvent) => void, cb?: () => void, err?: () => void) => {
-        console.error('TODO: UPLOAD DUPLICATE -> (resolveName before)');
         service.post( 'upload', data, { onUploadProgress }, 
             // () => UploadingToast.complete().then( cb ),
             // () => UploadingToast.error().then( err ) 

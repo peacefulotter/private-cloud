@@ -6,8 +6,6 @@ export interface User {
     password: string;
 }
 
-export type UploadState = 'disabled' | 'loaded' | 'uploading' | 'complete'
-
 export type Explorer = FileOrFolder[];
 
 export interface FileOrFolder {
@@ -35,8 +33,9 @@ export interface FileServiceContext {
 
 export interface ExplorerRouteData {
     explorer: Accessor<Explorer>;
-    setExplorer: Setter<Explorer>;
+    pathname: Accessor<string>;
     isSelecting: Accessor<boolean>;
+    setExplorer: Setter<Explorer>;
     setSelecting: Setter<boolean>;
     toggleSelectExplorer: (i: number) => () => void;
     sortExplorer: (cb: (prev: Explorer) => Explorer) => void;
@@ -45,5 +44,4 @@ export interface ExplorerRouteData {
     downloadSelected: () => void;
     folderService: FolderServiceContext;
     fileService: FileServiceContext;
-    pathname: string;
 }

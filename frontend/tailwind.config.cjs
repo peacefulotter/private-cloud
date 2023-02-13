@@ -1,20 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
-const safelist = ['pink', 'purple', 'blue', 'cyan', 'green', 'red', 'orange', 'yellow']
-	.map( color => [
-		`hover:bg-${color}-200`,
-		`bg-${color}-500`,
-		`hover:bg-${color}-400`,
-		`text-${color}-200`,
-		`stroke-${color}-200`,
-		`group-hover:stroke-${color}-700`,
-		`group-hover:text-${color}-700`
-	] )
-	.reduce( (acc, cur) => [...acc, ...cur], [] )
-
-console.log(safelist);
-
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     plugins: [
@@ -24,9 +9,16 @@ module.exports = {
 		"./src/**/*.{js,jsx,ts,tsx}",
 		'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}'
 	],
-	safelist,
 	theme: {
 		extend: {
+			colors: {
+				'first': '#82A455', 
+				'second': '#008D56', 
+				'third': '#006C41', 
+				'fourth': '#002D1A', 
+				'fifth': '#564946', 
+				'sixth': '#1d2a45'
+			},
 			animation: {
 				'fade-in': 'fadein 100ms ease-in forwards',
 			},

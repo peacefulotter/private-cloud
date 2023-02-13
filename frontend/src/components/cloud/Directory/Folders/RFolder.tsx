@@ -62,15 +62,15 @@ export default function RFolder( { folders, folder }: IFolder )
 
     return (
         <A
-            href={isSelecting() ? '' : pathname + name + '/'} 
-            class="flex flex-col justify-center w-28 h-28 items-center cursor-pointer no-underline overflow-hidden repo-elt-folder animate-fade-in"
+            href={isSelecting() ? '' : pathname() + '/' + name } 
+            class="text-third flex flex-col justify-center w-28 h-28 items-center cursor-pointer no-underline overflow-hidden repo-elt-folder animate-fade-in"
             style={{"pointer-events": editing() ? 'none' : 'auto'}}
             onClick={() => isSelecting() && toggleSelectExplorer(folder.i)}
         >
             <FiFolder class='text-5xl'/>
             <input 
                 type='text'
-                class="bg-transparent p-1 font-mono font-bold text-xs rounded-sm focus:ring-gray-500 border-transparent" 
+                class="text-second bg-transparent py-1 px-1 font-mono font-bold text-xs rounded hover:text-first hover:bg-sixth focus:ring-gray-500 border-transparent" 
                 style={{width: width + "ch", "max-width": '105%'}}
                 placeholder={name} 
                 onFocus={onFocus}
