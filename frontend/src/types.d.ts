@@ -10,7 +10,6 @@ export type Explorer = FileOrFolder[];
 
 export interface FileOrFolder {
     name: string;
-    selected: boolean;
     type: 'file' | 'folder'
 }
 
@@ -33,11 +32,12 @@ export interface FileServiceContext {
 
 export interface ExplorerRouteData {
     explorer: Accessor<Explorer>;
+    selectedExplorer: Accessor<number[]>;
     pathname: Accessor<string>;
     isSelecting: Accessor<boolean>;
     setExplorer: Setter<Explorer>;
     setSelecting: Setter<boolean>;
-    toggleSelectExplorer: (i: number) => () => void;
+    toggleSelectExplorer: (i: number) => void;
     sortExplorer: (cb: (prev: Explorer) => Explorer) => void;
     upload: (files: File[], progress: (e: ProgressEvent) => void, cb: () => void, err: () => void) => void;
     removeSelected: () => void;

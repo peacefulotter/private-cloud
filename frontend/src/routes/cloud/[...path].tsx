@@ -26,6 +26,7 @@ function partition<T, U>(array: T[], isLeft: (t: T) => boolean, map: (t: T, i: n
 export const routeData: RouteDataFunc<ExplorerRouteData> = ({location}) => {
 
     const [explorer, setExplorer] = createSignal<Explorer>([]);
+    const [selectedExplorer, setSelectedExplorer] = createSignal<number[]>([]);
     const [isSelecting, setSelecting] = createSignal<boolean>(false);
     const [pathname, setPathname] = createSignal<string>(location.pathname);
 
@@ -42,10 +43,14 @@ export const routeData: RouteDataFunc<ExplorerRouteData> = ({location}) => {
         } )
     } )
 
-    const toggleSelectExplorer = (i: number) => () => {
-        const temp = [...explorer()];
-        temp[i].selected = !temp[i].selected;
-        setExplorer(temp);
+    const toggleSelectExplorer = (i: number) => {
+        const temp = [...selectedExplorer()];
+        const index = temp.indexOf(i);
+        if ( index !== -1)
+            temp.splice(index, 1);
+        else
+            temp.push(i);
+        setSelectedExplorer(temp);
     }
     
     const sortExplorer = ( cb: (prev: Explorer) => Explorer ) => 
@@ -58,7 +63,7 @@ export const routeData: RouteDataFunc<ExplorerRouteData> = ({location}) => {
         FileService.upload( data, 
             progress, 
             () => { 
-                const filesExplorer = files.map( ({name}) => ({name, selected: false, type: 'file'} as FileOrFolder))
+                const filesExplorer = files.map( ({name}) => ({name, type: 'file'} as FileOrFolder))
                 sortExplorer( prev => [...prev, ...filesExplorer] )
                 cb()
             },
@@ -96,19 +101,22 @@ export const routeData: RouteDataFunc<ExplorerRouteData> = ({location}) => {
         rename: FileService.rename(explorer(), sortExplorer, location.pathname),
     }
 
-    const removeSelected = FileService.removeSelected( location.pathname, explorer(), () => 
-        setExplorer( prev => prev.filter( v => !v.selected ) )
-    )
+    const getSelectedExplorer = () => {
+        const exp = explorer();
+        return selectedExplorer().map( i => exp[i] );
+    }
 
-    const downloadSelected = FileService.downloadMany(location.pathname, explorer().filter( v => v.selected ))
+    const removeSelected = FileService.removeSelected( location.pathname, getSelectedExplorer())
+    
+    const downloadSelected = FileService.downloadMany(location.pathname, getSelectedExplorer())
 
 	return { 
-		explorer, isSelecting, pathname,
+		explorer, selectedExplorer, isSelecting, pathname,
         setExplorer, setSelecting, 
 		toggleSelectExplorer, sortExplorer, upload, 
 		removeSelected, downloadSelected,
 		folderService, fileService
-	};
+	} as ExplorerRouteData;
 }
 
 

@@ -63,7 +63,7 @@ export default function RFolder( { folders, folder }: IFolder )
     return (
         <A
             href={isSelecting() ? '' : pathname() + '/' + name } 
-            class="text-third flex flex-col justify-center w-28 h-28 items-center cursor-pointer no-underline overflow-hidden repo-elt-folder animate-fade-in"
+            class="text-second flex flex-col justify-center w-28 h-28 items-center cursor-pointer no-underline overflow-hidden repo-elt-folder animate-fade-in"
             style={{"pointer-events": editing() ? 'none' : 'auto'}}
             onClick={() => isSelecting() && toggleSelectExplorer(folder.i)}
         >

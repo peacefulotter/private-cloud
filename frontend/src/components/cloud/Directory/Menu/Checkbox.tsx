@@ -5,30 +5,34 @@ interface ICheckbox {
   	onClick: (isChecked: boolean, e: unknown) => void;
     className?: string;
     checkedClass?: string;
-	forceState?: boolean;
     behaveAsButton?: boolean;
     children?: (isChecked: boolean, hover: boolean) => JSX.Element; 
 }
 
-export default function Checkbox( { forceState, className, checkedClass, behaveAsButton, onClick, children } : ICheckbox ) 
+export default function Checkbox( { className, checkedClass, behaveAsButton, onClick, children } : ICheckbox ) 
 {
-    const [isChecked, setChecked] = createSignal<boolean>(forceState || false)	
+    const [isChecked, setChecked] = createSignal<boolean>(false)	
+    const [mouseDown, setMouseDown] = createSignal<boolean>(false)	
 	const { hover, onMouseOver, onMouseOut } = useHover();
 
-    createEffect( () => {
-        if ( forceState === undefined ) return;
-        setChecked( forceState )
-    }, [forceState] )
+    const onMouseDown = () => {
+        if ( behaveAsButton ) setChecked(true)
+        setMouseDown(true);
+    }
+    const onMouseUp = () => {
+        if ( behaveAsButton ) setChecked(false)
+        setMouseDown(false);
+    }
 
   	return (
         <div 
-            class={`${className} ${isChecked() ? checkedClass : ''}`}
+            class={`${mouseDown() ? 'scale-90' : ''} ${isChecked() ? checkedClass : ''} ${className}`}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
-            onMouseDown={() => behaveAsButton && setChecked(true)}
-            onMouseUp={() => behaveAsButton && setChecked(false)}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
             onClick={e => { 	
-				const update = forceState !== undefined ? forceState : !isChecked;	
+				const update = !isChecked();	
 				onClick( update, e ); 
 				!behaveAsButton && setChecked( update ); 
 			}}

@@ -2,6 +2,7 @@
 import useRequestsService from "./RequestsService";
 
 import { Explorer } from "~/types";
+import { Accessor } from "solid-js";
 
 
 const service = useRequestsService('/file/');
@@ -36,7 +37,7 @@ const FileService = {
         )
     },
     
-    removeSelected: (pathname: string, explorer: Explorer, cb: () => void) => () => {
+    removeSelected: (pathname: string, explorer: Explorer, cb?: () => void) => () => {
         service.get( 'remove/selected', { pathname, explorer }, 
             cb, 
             // () => alertError('Failed to remove files') 

@@ -29,9 +29,9 @@ const BreadcrumbItem = ( { home, path, href }: IBreadcrumbItem) => {
     return (
         <>
         <li class='group'>
-            <A rel="link" href={href} class="btn">
+            <A rel="link" href={href} class="btn transition-colors hover:bg-second hover:text-sixth">
                 <Show when={home}><FiHome class="text-second text-xl"/></Show>
-                <p class="text-second text-sm font-medium transition-colors;">{ decodeURI( path ) }</p>
+                <p class="text-sm font-medium">{ decodeURI( path ) }</p>
             </A>
         </li>
         <BreadcrumbSeparator />
